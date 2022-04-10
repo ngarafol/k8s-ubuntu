@@ -53,3 +53,16 @@ containerd config default | sudo tee /etc/containerd/config.toml
 # restart containerd
 
 sudo systemctl restart containerd
+
+# fix docker cgroups
+
+if [[ ! -f /etc/docker/daemon.json ]]
+    then
+	cat << EOF | sudo tee /etc/docker/daemon.json
+{
+  "exec-opts": ["native.cgroupdriver=systemd"]
+}
+EOF
+fi
+
+sudo systemctl restart docker
